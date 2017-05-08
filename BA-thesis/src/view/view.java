@@ -1,8 +1,5 @@
 package view;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -22,24 +19,14 @@ public class view {
 		panel.add(header);
 		JButton loadButton = new JButton("Load File");
 		panel.add(loadButton);
-		loadButton.addActionListener(new LoadAction());
+		loadButton.addActionListener(e -> {
+			JFileChooser chooser = new JFileChooser();
+			chooser.showOpenDialog(null);
+		});
 
 		JButton exitButton = new JButton("Exit");
 		panel.add(exitButton);
-		exitButton.addActionListener(new ExitAction());
+		exitButton.addActionListener(e -> System.exit(0));
 
-	}
-
-	static class LoadAction implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			JFileChooser chooser = new JFileChooser();
-			chooser.showOpenDialog(null);
-		}
-	}
-
-	static class ExitAction implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			System.exit(0);
-		}
 	}
 }
