@@ -1,4 +1,4 @@
-package org.myorg.quickstart;
+package xxx.examples;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -28,15 +28,17 @@ import org.apache.flink.util.Collector;
  * socket. To run the example make sure that the service providing the text data
  * is already up and running.
  *
- * <p>To start an example socket text stream on your local machine run netcat from
+ * <p>
+ * To start an example socket text stream on your local machine run netcat from
  * a command line: <code>nc -lk 9999</code>, where the parameter specifies the
  * port number.
  *
- * <p>Usage:
- * <code>SocketTextStreamWordCount &lt;hostname&gt; &lt;port&gt;</code>
+ * <p>
+ * Usage: <code>SocketTextStreamWordCount &lt;hostname&gt; &lt;port&gt;</code>
  * <br>
  *
- * <p>This example shows how to:
+ * <p>
+ * This example shows how to:
  * <ul>
  * <li>use StreamExecutionEnvironment.socketTextStream
  * <li>write a simple Flink program
@@ -48,12 +50,12 @@ import org.apache.flink.util.Collector;
 public class SocketTextStreamWordCount {
 
 	//
-	//	Program
+	// Program
 	//
 
 	public static void main(String[] args) throws Exception {
 
-		if (args.length != 2){
+		if (args.length != 2) {
 			System.err.println("USAGE:\nSocketTextStreamWordCount <hostname> <port>");
 			return;
 		}
@@ -62,18 +64,17 @@ public class SocketTextStreamWordCount {
 		Integer port = Integer.parseInt(args[1]);
 
 		// set up the execution environment
-		final StreamExecutionEnvironment env = StreamExecutionEnvironment
-				.getExecutionEnvironment();
+		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		// get input data
 		DataStream<String> text = env.socketTextStream(hostName, port);
 
 		DataStream<Tuple2<String, Integer>> counts =
-		// split up the lines in pairs (2-tuples) containing: (word,1)
-		text.flatMap(new LineSplitter())
-		// group by the tuple field "0" and sum up tuple field "1"
-				.keyBy(0)
-				.sum(1);
+				// split up the lines in pairs (2-tuples) containing: (word,1)
+				text.flatMap(new LineSplitter())
+						// group by the tuple field "0" and sum up tuple field
+						// "1"
+						.keyBy(0).sum(1);
 
 		counts.print();
 
@@ -82,15 +83,21 @@ public class SocketTextStreamWordCount {
 	}
 
 	//
-	// 	User Functions
+	// User Functions
 	//
 
 	/**
-	 * Implements the string tokenizer that splits sentences into words as a user-defined
-	 * FlatMapFunction. The function takes a line (String) and splits it into
-	 * multiple pairs in the form of "(word,1)" (Tuple2&lt;String, Integer&gt;).
+	 * Implements the string tokenizer that splits sentences into words as a
+	 * user-defined FlatMapFunction. The function takes a line (String) and
+	 * splits it into multiple pairs in the form of "(word,1)"
+	 * (Tuple2&lt;String, Integer&gt;).
 	 */
 	public static final class LineSplitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
+
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
 
 		@Override
 		public void flatMap(String value, Collector<Tuple2<String, Integer>> out) {
@@ -100,7 +107,7 @@ public class SocketTextStreamWordCount {
 			// emit the pairs
 			for (String token : tokens) {
 				if (token.length() > 0) {
-					out.collect(new Tuple2<String, Integer>(token, 1));
+					out.collect(new Tuple2<>(token, 1));
 				}
 			}
 		}
