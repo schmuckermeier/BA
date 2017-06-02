@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import model.StreamValue;
 
-public class FakeDataGeneratorTest {
+public class RandomDataGeneratorTest {
 
 	@Test
 	public void testCreateStreaData() {
-		Stream<StreamValue> stream = new FakeDataGenerator().createStreamData();
+		Stream<StreamValue> stream = new RandomDataGenerator().createStreamData();
 		stream.forEach(v -> System.out.println(v.toSting()));
 	}
 
