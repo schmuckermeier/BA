@@ -10,9 +10,10 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import com.dataartisans.data.DataPoint;
 import com.dataartisans.sinks.InfluxDBSink;
 
-import controller.CSVMapFunktion;
+import controller.StockDataHandler;
+import controller.StockPriceMapper;
 
-public class CSVFileReaderView {
+public class StockDataView {
 
 	public static void main(String[] args) throws Exception {
 
@@ -22,7 +23,6 @@ public class CSVFileReaderView {
 		// set up the execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-		// TODO: ask why graph changes with different parallelism!!!!
 		// boiler plate for this demo
 		env.setRestartStrategy(RestartStrategies.fixedDelayRestart(1000, 1000));
 		// env.setParallelism(1);
@@ -31,23 +31,22 @@ public class CSVFileReaderView {
 		// make parameters available in the web interface
 		env.getConfig().setGlobalJobParameters(params);
 
+		// fetch stock data from api
+		StockDataHandler.loadDataToLocalCache("NDAQ");
+
 		// read the text file from given input path
-		DataStream<String> textData = env.readTextFile(params.get("input"));
+		DataStream<String> textData = env.readTextFile(StockDataHandler.OUT_PATH);
 
-		// position in line starting with zero
-		final int TIMESTAMP_POSITION = 3;
-		final int VALUE_POSITION = 2;
-
-		SingleOutputStreamOperator<DataPoint<Double>> streamOperator = textData
-				.map(new CSVMapFunktion(TIMESTAMP_POSITION, VALUE_POSITION));
+		// get stock data
+		SingleOutputStreamOperator<DataPoint<Double>> streamOperator = textData.map(new StockPriceMapper());
 
 		// Write this sensor stream out to InfluxDB
-		SinkFunction<DataPoint<Double>> sinkFunction = new InfluxDBSink<>("csvFile");
+		SinkFunction<DataPoint<Double>> sinkFunction = new InfluxDBSink<>("stockPrice");
 
 		streamOperator.addSink(sinkFunction);
 
 		// execute program
-		env.execute("Streaming read CSV file");
+		env.execute("Streaming stock price");
 	}
 
 }

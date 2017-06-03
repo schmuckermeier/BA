@@ -9,8 +9,8 @@ import com.dataartisans.data.DataPoint;
 @SuppressWarnings("serial")
 public class CSVMapFunktion implements MapFunction<String, DataPoint<Double>> {
 
-	int timestampPosition;
-	int valuePosition;
+	final int TIMESTAMP_POSITION;
+	final int VALUE_POSITION;
 
 	/**
 	 * Position of time stamp and the actual value in the CSV file. Starting
@@ -22,8 +22,8 @@ public class CSVMapFunktion implements MapFunction<String, DataPoint<Double>> {
 	 *            as double (e.g. 3.42)
 	 */
 	public CSVMapFunktion(int timestampPosition, int valuePosition) {
-		this.timestampPosition = timestampPosition;
-		this.valuePosition = valuePosition;
+		TIMESTAMP_POSITION = timestampPosition;
+		VALUE_POSITION = valuePosition;
 	}
 
 	@Override
@@ -31,8 +31,8 @@ public class CSVMapFunktion implements MapFunction<String, DataPoint<Double>> {
 		System.out.println(line);
 		String[] split = line.split(",");
 		try {
-			double value = Double.parseDouble(split[valuePosition]);
-			long timestamp = Long.parseLong(split[timestampPosition]);
+			double value = Double.parseDouble(split[VALUE_POSITION]);
+			long timestamp = Long.parseLong(split[TIMESTAMP_POSITION]);
 			System.out.println(new Date(timestamp).toString() + " -- Timestamp: " + timestamp + "  Value: " + value);
 			return new DataPoint<>(timestamp, value);
 		} catch (Exception e) {
