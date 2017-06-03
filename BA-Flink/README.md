@@ -1,9 +1,10 @@
 - Working Flink setup
 - some little Flink tests
 - fake data generator
+- visual output on Grafana from my data generator
+- visual output on Grafana from csv file
 
 
 TODO next:
-- visual output on Grafana from my data generator
 - start with MA implementation
 
