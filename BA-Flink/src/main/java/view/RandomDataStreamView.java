@@ -12,12 +12,17 @@ import com.dataartisans.sources.TimestampSource;
 
 import controller.RandomDataGenerator;
 
-public class OsconWebStreamView {
+public class RandomDataStreamView {
 
 	public static void main(String[] args) throws Exception {
 
 		// set up the execution environment
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+		// boiler plate for this demo
+		env.setRestartStrategy(RestartStrategies.fixedDelayRestart(1000, 1000));
+		env.setParallelism(1);
+		env.disableOperatorChaining();
 
 		// Simulate some sensor data
 		DataStream<DataPoint<Double>> sensorStream = generateSensorData(env);
@@ -29,12 +34,7 @@ public class OsconWebStreamView {
 		env.execute("Random Data Generator");
 	}
 
-	private static DataStream<DataPoint<Double>> generateSensorData(StreamExecutionEnvironment env) {
-
-		// boiler plate for this demo
-		env.setRestartStrategy(RestartStrategies.fixedDelayRestart(1000, 1000));
-		env.setParallelism(1);
-		env.disableOperatorChaining();
+	public static DataStream<DataPoint<Double>> generateSensorData(StreamExecutionEnvironment env) {
 
 		final int PERIOD_MS = 50;
 		final int SLOWDOWN_FACTOR = 1;
