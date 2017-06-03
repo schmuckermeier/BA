@@ -14,7 +14,7 @@ public class CSVMapFunktion implements MapFunction<String, DataPoint<Double>> {
 
 	/**
 	 * Position of time stamp and the actual value in the CSV file. Starting
-	 * with 0.
+	 * with zero.
 	 *
 	 * @param timestampPosition
 	 *            as long

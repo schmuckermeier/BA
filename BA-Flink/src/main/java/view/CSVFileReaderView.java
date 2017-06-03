@@ -33,7 +33,12 @@ public class CSVFileReaderView {
 		// read the text file from given input path
 		DataStream<String> textData = env.readTextFile(params.get("input"));
 
-		SingleOutputStreamOperator<DataPoint<Double>> streamOperator = textData.map(new CSVMapFunktion(3, 2));
+		// position in line starting with zero
+		final int TIMESTAMP_POSITION = 3;
+		final int VALUE_POSITION = 2;
+
+		SingleOutputStreamOperator<DataPoint<Double>> streamOperator = textData
+				.map(new CSVMapFunktion(TIMESTAMP_POSITION, VALUE_POSITION));
 
 		// Write this sensor stream out to InfluxDB
 		SinkFunction<DataPoint<Double>> sinkFunction = new InfluxDBSink<>("csvFile");
