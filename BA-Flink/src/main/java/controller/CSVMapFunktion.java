@@ -4,10 +4,10 @@ import java.util.Date;
 
 import org.apache.flink.api.common.functions.MapFunction;
 
-import com.dataartisans.data.DataPoint;
+import com.dataartisans.data.KeyedDataPoint;
 
 @SuppressWarnings("serial")
-public class CSVMapFunktion implements MapFunction<String, DataPoint<Double>> {
+public class CSVMapFunktion implements MapFunction<String, KeyedDataPoint<Double>> {
 
 	final int TIMESTAMP_POSITION;
 	final int VALUE_POSITION;
@@ -27,14 +27,13 @@ public class CSVMapFunktion implements MapFunction<String, DataPoint<Double>> {
 	}
 
 	@Override
-	public DataPoint<Double> map(String line) {
-		System.out.println(line);
+	public KeyedDataPoint<Double> map(String line) {
 		String[] split = line.split(",");
 		try {
 			double value = Double.parseDouble(split[VALUE_POSITION]);
 			long timestamp = Long.parseLong(split[TIMESTAMP_POSITION]);
 			System.out.println(new Date(timestamp).toString() + " -- Timestamp: " + timestamp + "  Value: " + value);
-			return new DataPoint<>(timestamp, value);
+			return new KeyedDataPoint<>("csv data", timestamp, value);
 		} catch (Exception e) {
 			throw new NumberFormatException("Format of line doesn't fit or line is empty.");
 		}

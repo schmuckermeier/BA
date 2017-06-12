@@ -37,7 +37,7 @@ public class RandomDataStreamView {
 	public static DataStream<DataPoint<Double>> generateSensorData(StreamExecutionEnvironment env) {
 
 		final int PERIOD_MS = 50;
-		final int SLOWDOWN_FACTOR = 1;
+		final int SLOWDOWN_FACTOR = 2;
 
 		// create timestamp
 		DataStreamSource<DataPoint<Long>> timestampSource = env
